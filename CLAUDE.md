@@ -8,6 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `create-next-app`으로 막 만든 상태다. 앱 코드는 아직 없고, `src/app`에는 기본 템플릿만 있다. 기능 명세는 `PRD.md`다. 구현 전에 반드시 읽는다. 기능 F1~F7, 데이터 모델, 미결 사항(9장)이 정리되어 있다.
 
+UI 가이드는 `ui.md`다. 화면이나 컴포넌트를 만들거나 고치기 전에 반드시 읽는다. 디자인 토큰, 레이아웃, 컴포넌트별 Tailwind 클래스, 상태 화면, 문구 규칙이 정리되어 있다. 색상 hex 값을 컴포넌트에 직접 쓰지 않고 `ui.md`의 토큰을 쓴다.
+
 ## 명령어
 
 - `npm run dev`: 개발 서버 (Turbopack)
