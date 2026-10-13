@@ -36,7 +36,8 @@ AI 뉴스 카드 앱: RSS → Claude(번역·요약·분류) → 카드 → 선�
   - RSS 두 개를 `rss-parser`로 파싱한다. 한 소스가 실패해도 다른 소스는 계속 처리한다.
   - DB에 이미 있는 URL은 건너뛴다. 같은 URL로 Claude를 다시 호출하지 않는다.
   - 새 기사 1건당 Claude 호출은 **1회**(Haiku 계열 모델)다. 응답 JSON은 `titleKo`, `summaryKo`(3~4문장), `categoryId | null`이다. 프롬프트에는 현재 카테고리 목록(이름 + 설명)을 넣는다.
-  - 응답은 `zod`로 검증한다. 실패한 기사는 저장하지 않으며, 다음 가져오기 때 다시 시도된다.
+  - 최근 24시간 안에 발행된 기사만 가져온다. 기사는 RSS 원문(`originalTitle`, `description`)으로 먼저 저장하고 `titleKo`·`summaryKo`는 null로 둔다. 카드는 null이면 원문 제목과 description을 대신 보여준다.
+  - 응답은 `zod`로 검증한다. Claude 처리 대상은 `titleKo`가 null인 기사이며, 실패하면 null로 남아 다음 가져오기 때 다시 시도된다.
   - rate limit에 대비해 동시 처리 개수를 제한하고 병렬로 처리한다.
 - **Notion 저장**: 서버가 Claude API의 **MCP 커넥터**로 Notion 원격 MCP 서버를 호출한다. 저장 대상은 운영자의 Notion 워크스페이스 하나이고, 페이지 URL을 `notion_saves`에 기록한다. 저장 위치와 OAuth 토큰 처리 방식은 아직 미결이다 (PRD 9장).
 - **카테고리 변경**은 이후 가져오는 기사부터 적용된다. 기존 기사는 다시 분류하지 않는다.

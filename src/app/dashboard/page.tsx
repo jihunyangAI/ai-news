@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import { auth } from "@clerk/nextjs/server";
+import { FetchNewsButton } from "@/components/fetch-news-button";
 import { NewsCard, NewsGridSkeleton } from "@/components/news-card";
 import { getArticles } from "@/lib/articles";
 
@@ -43,6 +44,7 @@ async function NewsList() {
       {articles.length === 0 ? (
         <div className="mt-6 flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border py-20 text-center">
           <p className="text-sm text-muted">아직 수집한 뉴스가 없어요</p>
+          <FetchNewsButton />
         </div>
       ) : (
         <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -38,7 +38,7 @@
 - 로그인/로그아웃, 회원가입은 Clerk 기본 컴포넌트를 쓴다.
 
 ### F2. 뉴스 가져오기
-- '뉴스 가져오기' 버튼을 누르면 두 RSS를 가져와 파싱한다.
+- '뉴스 가져오기' 버튼을 누르면 두 RSS를 가져와 파싱한다. 최근 24시간 안에 발행된 기사만 대상이다.
 - 원문 URL(`sourceUrl`)이 DB에 이미 있는 기사는 건너뛴다 (중복 방지, Claude 호출 비용 절감).
 - 새 기사만 Claude API로 처리한다 (F3).
 - 진행 중에는 버튼을 비활성화하고 로딩 상태를 보여준다.
@@ -51,7 +51,7 @@
 - 기사 1건당 Claude 호출 1회로 번역·요약·분류를 함께 처리한다.
 - 어떤 카테고리에도 맞지 않으면 '미분류'(null)로 둔다.
 - 모델: 비용·속도를 위해 Haiku 계열을 기본으로 쓴다.
-- 처리 실패한 기사는 저장하지 않고, 다음 '뉴스 가져오기' 때 다시 시도된다.
+- 기사는 RSS 원문(제목, description)으로 먼저 저장한다. 한국어 제목·요약이 비어 있는(null) 기사가 처리 대상이며, 실패하면 null로 남아 다음 '뉴스 가져오기' 때 다시 시도된다.
 
 ### F4. 뉴스 카드 목록
 - 카드 항목: 한국어 제목, 한국어 요약, 카테고리, 출처, 발행일, 원문 링크, Notion 저장 버튼.
@@ -110,8 +110,9 @@
 | sourceUrl | text, unique | 중복 판별 기준 |
 | source | text | `techcrunch` / `theverge` |
 | originalTitle | text | |
-| titleKo | text | |
-| summaryKo | text | |
+| description | text, nullable | RSS 본문(HTML 제거). Claude 입력 |
+| titleKo | text, nullable | null = Claude 미처리 |
+| summaryKo | text, nullable | null = Claude 미처리 |
 | categoryId | int, nullable FK | `ON DELETE SET NULL` (null = 미분류) |
 | publishedAt | timestamp | |
 | createdAt | timestamp | |

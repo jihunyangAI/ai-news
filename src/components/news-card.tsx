@@ -28,9 +28,14 @@ export function NewsCard({ article }: { article: ArticleCard }) {
         title={article.originalTitle}
         className="mt-3 line-clamp-2 text-base font-semibold leading-snug sm:text-lg"
       >
-        {article.titleKo}
+        {/* Claude 처리 전에는 원문 제목과 RSS 본문을 대신 보여준다 */}
+        {article.titleKo ?? article.originalTitle}
       </h2>
-      <p className="mt-2 line-clamp-4 text-[15px] leading-7 text-foreground/80">{article.summaryKo}</p>
+      {(article.summaryKo ?? article.description) && (
+        <p className="mt-2 line-clamp-4 text-[15px] leading-7 text-foreground/80">
+          {article.summaryKo ?? article.description}
+        </p>
+      )}
 
       <div className="mt-auto flex items-center justify-between border-t border-border pt-4">
         <a

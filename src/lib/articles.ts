@@ -14,6 +14,7 @@ export async function getArticles() {
       originalTitle: articles.originalTitle,
       titleKo: articles.titleKo,
       summaryKo: articles.summaryKo,
+      description: articles.description,
       publishedAt: articles.publishedAt,
       categoryName: categories.name,
     })

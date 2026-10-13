@@ -4,6 +4,7 @@ import { Noto_Sans_KR } from "next/font/google";
 import { ClerkProvider, Show, UserButton } from "@clerk/nextjs";
 import { koKR } from "@clerk/localizations";
 import { Suspense } from "react";
+import { FetchNewsButton } from "@/components/fetch-news-button";
 import "./globals.css";
 
 // Korean glyphs are split into many unicode-range files, so there is no single subset to preload
@@ -30,7 +31,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                   <Link href="/dashboard" className="text-lg font-bold tracking-tight">
                     AI뉴스 수집기
                   </Link>
-                  <UserButton />
+                  <div className="flex items-center gap-3">
+                    <FetchNewsButton />
+                    <UserButton />
+                  </div>
                 </div>
               </header>
             </Show>
