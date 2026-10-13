@@ -10,7 +10,7 @@ export default function Home() {
       </Show>
       <Show when="signed-in">
         <main className="flex flex-1 items-center justify-center px-4">
-          <p className="text-zinc-600 dark:text-zinc-400">뉴스 목록이 여기에 표시됩니다.</p>
+          <p className="text-muted">뉴스 목록이 여기에 표시됩니다.</p>
         </main>
       </Show>
     </Suspense>

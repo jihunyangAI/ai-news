@@ -15,10 +15,10 @@ export function SignInGate() {
 
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-6 px-4 text-center">
-      <h1 className="text-2xl font-semibold">AI 뉴스 요약</h1>
-      <p className="text-zinc-600 dark:text-zinc-400">로그인 후 이용할 수 있습니다.</p>
+      <h1 className="text-2xl font-semibold">AI뉴스 수집기</h1>
+      <p className="text-muted">로그인 후 이용할 수 있습니다.</p>
       <SignInButton mode="modal">
-        <button className="rounded-full bg-foreground px-6 py-2.5 font-medium text-background">
+        <button className="rounded-full bg-primary px-6 py-2.5 font-medium text-white hover:bg-primary-hover">
           로그인
         </button>
       </SignInButton>
