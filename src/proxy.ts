@@ -6,9 +6,14 @@ const isPublicRoute = createRouteMatcher(["/"]);
 const isApiRoute = createRouteMatcher(["/api(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isPublicRoute(req)) return;
-
   const { userId } = await auth();
+
+  if (isPublicRoute(req)) {
+    // The dashboard is the main screen once signed in
+    if (userId) return NextResponse.redirect(new URL("/dashboard", req.url));
+    return;
+  }
+
   if (userId) return;
 
   if (isApiRoute(req)) {
