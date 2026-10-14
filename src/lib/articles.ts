@@ -25,7 +25,7 @@ export async function getArticles({ page, category }: { page: number; category: 
       summaryKo: articles.summaryKo,
       description: articles.description,
       publishedAt: articles.publishedAt,
-      // 카테고리 색(categoryTone)을 고르는 데 쓴다
+      // 카드 배지 색을 고를 때 이 카테고리의 순서를 찾는 데 쓴다
       categoryId: categories.id,
       categoryName: categories.name,
     })

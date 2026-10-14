@@ -2,9 +2,9 @@ import type { ArticleCard } from "@/lib/articles";
 import { categoryTone } from "@/lib/category-color";
 import { formatPublishedAt, sourceLabel } from "@/lib/format";
 
-function CategoryBadge({ id, name }: { id: number | null; name: string | null }) {
+function CategoryBadge({ colorIndex, name }: { colorIndex: number | null; name: string | null }) {
   // 카테고리 바 칩과 같은 카테고리 색, 미분류는 회색 (ui.md 4.2)
-  const tone = id !== null && name ? categoryTone(id).badge : "bg-foreground/5 text-muted";
+  const tone = colorIndex !== null && name ? categoryTone(colorIndex).badge : "bg-foreground/5 text-muted";
   return (
     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${tone}`}>
       {name ?? "미분류"}
@@ -12,11 +12,12 @@ function CategoryBadge({ id, name }: { id: number | null; name: string | null })
   );
 }
 
-export function NewsCard({ article }: { article: ArticleCard }) {
+// colorIndex: 기사 카테고리의 순서(생성순). null이면 미분류다.
+export function NewsCard({ article, colorIndex }: { article: ArticleCard; colorIndex: number | null }) {
   return (
     <article className="flex h-full flex-col rounded-2xl border border-border bg-surface p-5 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-center justify-between gap-2">
-        <CategoryBadge id={article.categoryId} name={article.categoryName} />
+        <CategoryBadge colorIndex={colorIndex} name={article.categoryName} />
         <p className="text-xs text-muted">
           {sourceLabel(article.source)} ·{" "}
           <time dateTime={article.publishedAt.toISOString()}>

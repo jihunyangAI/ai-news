@@ -66,7 +66,8 @@ function DeleteConfirm({ category, onCancel }: { category: Category; onCancel: (
   );
 }
 
-export function CategoryRow({ category }: { category: Category }) {
+// colorIndex: 카테고리 목록(생성순)에서의 순서. 카테고리 바와 같은 색을 고른다.
+export function CategoryRow({ category, colorIndex }: { category: Category; colorIndex: number }) {
   const [mode, setMode] = useState<"view" | "edit" | "delete">("view");
   const backToView = () => setMode("view");
 
@@ -79,7 +80,7 @@ export function CategoryRow({ category }: { category: Category }) {
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span aria-hidden className={`size-2.5 shrink-0 rounded-full ${categoryTone(category.id).dot}`} />
+                <span aria-hidden className={`size-2.5 shrink-0 rounded-full ${categoryTone(colorIndex).dot}`} />
                 <h2 className="font-semibold">{category.name}</h2>
                 <span className="text-xs text-muted">기사 {category.count}건</span>
               </div>

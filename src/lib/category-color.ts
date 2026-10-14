@@ -10,7 +10,8 @@ const TONES = [
 
 export type CategoryTone = (typeof TONES)[number];
 
-// id로 색을 고른다. 다른 카테고리를 지우거나 순서가 바뀌어도 같은 카테고리는 같은 색을 유지한다.
-export function categoryTone(categoryId: number): CategoryTone {
-  return TONES[categoryId % TONES.length];
+// 카테고리 목록(생성순)에서의 순서로 색을 고른다. 6개까지는 색이 겹치지 않는다.
+// 중간 카테고리를 지우면 그 뒤 카테고리의 색이 하나씩 당겨진다.
+export function categoryTone(index: number): CategoryTone {
+  return TONES[index % TONES.length];
 }

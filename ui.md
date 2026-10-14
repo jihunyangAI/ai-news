@@ -100,7 +100,8 @@ body {
 
 카테고리 바의 칩과 카드의 카테고리 배지는 카테고리마다 색 하나를 쓴다. `globals.css`에 `--category-1` ~ `--category-6`(violet, sky, emerald, rose, amber, fuchsia)을 두고 `@theme inline`에 `--color-category-N`으로 연결한다. 라이트 모드는 글자로 써도 대비가 충분한 700 계열, 다크 모드는 400 계열을 쓴다. 칩 배경은 같은 색의 `/10` 투명도로 만든다.
 
-- 카테고리 → 색은 `src/lib/category-color.ts`의 `categoryTone(id)`로 정한다 (`id % 6`). 다른 카테고리를 지워도 색이 바뀌지 않는다.
+- 카테고리 → 색은 `src/lib/category-color.ts`의 `categoryTone(index)`로 정한다. `index`는 카테고리 목록(생성순)에서의 순서이고 `index % 6`으로 색을 고른다. 6개까지는 색이 겹치지 않고, 중간 카테고리를 지우면 뒤 카테고리의 색이 하나씩 당겨진다.
+- 카테고리 바, 카드 배지, 카테고리 관리 화면은 모두 같은 순서(`getCategoryCounts()`의 정렬)로 색을 고른다.
 - 클래스 이름은 Tailwind가 찾을 수 있게 그 파일에 전체 이름으로 적는다. 컴포넌트에서 문자열을 조립하지 않는다.
 - 개발 서버(Turbopack)가 `category-color.ts`를 스캔하지 못해 색이 빠지는 일이 있어, `globals.css`의 `@source inline(...)`에도 같은 클래스를 등록한다. 카테고리 색 클래스를 새로 쓰면 두 곳을 함께 고친다.
 

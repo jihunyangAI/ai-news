@@ -68,6 +68,8 @@ async function NewsList({ searchParams }: Pick<PageProps<"/dashboard">, "searchP
   // 범위를 넘는 페이지는 마지막 페이지를 보여준다
   const page = Math.min(parsePage(params.page), totalPages);
   const articles = await getArticles({ page, category });
+  // 카드 배지 색은 카테고리 바와 같게 카테고리 순서(생성순)로 고른다
+  const colorIndexById = new Map(counts.categories.map((c, index) => [c.id, index]));
 
   return (
     <>
@@ -97,7 +99,10 @@ async function NewsList({ searchParams }: Pick<PageProps<"/dashboard">, "searchP
         <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {articles.map((article) => (
             <li key={article.id}>
-              <NewsCard article={article} />
+              <NewsCard
+                article={article}
+                colorIndex={article.categoryId === null ? null : (colorIndexById.get(article.categoryId) ?? null)}
+              />
             </li>
           ))}
         </ul>

@@ -63,9 +63,9 @@ export function CategoryBar({
             전체
           </CategoryChip>
         </li>
-        {categories.map((c) => (
+        {categories.map((c, index) => (
           <li key={c.id}>
-            <CategoryChip category={c.id} active={active === c.id} count={c.count} style={categoryTone(c.id)}>
+            <CategoryChip category={c.id} active={active === c.id} count={c.count} style={categoryTone(index)}>
               {c.name}
             </CategoryChip>
           </li>

@@ -57,8 +57,8 @@ async function CategoryList() {
 
   return (
     <ul className="mt-6 flex flex-col gap-3">
-      {categories.map((category) => (
-        <CategoryRow key={category.id} category={category} />
+      {categories.map((category, index) => (
+        <CategoryRow key={category.id} category={category} colorIndex={index} />
       ))}
     </ul>
   );
