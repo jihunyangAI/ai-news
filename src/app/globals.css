@@ -12,6 +12,14 @@
   --primary-soft: #eff6ff;
   --danger: #dc2626;
   --success: #16a34a;
+  /* 카테고리 색 (ui.md 2.4). 글자에도 쓰므로 밝은 배경에서 대비가 충분한 700 계열.
+     클래스 매핑은 src/lib/category-color.ts */
+  --category-1: #6d28d9; /* violet */
+  --category-2: #0369a1; /* sky */
+  --category-3: #047857; /* emerald */
+  --category-4: #be123c; /* rose */
+  --category-5: #b45309; /* amber */
+  --category-6: #a21caf; /* fuchsia */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,6 +34,12 @@
     --primary-soft: #172554;
     --danger: #f87171;
     --success: #4ade80;
+    --category-1: #a78bfa;
+    --category-2: #38bdf8;
+    --category-3: #34d399;
+    --category-4: #fb7185;
+    --category-5: #fbbf24;
+    --category-6: #e879f9;
   }
 }
 
@@ -40,6 +54,12 @@
   --color-primary-soft: var(--primary-soft);
   --color-danger: var(--danger);
   --color-success: var(--success);
+  --color-category-1: var(--category-1);
+  --color-category-2: var(--category-2);
+  --color-category-3: var(--category-3);
+  --color-category-4: var(--category-4);
+  --color-category-5: var(--category-5);
+  --color-category-6: var(--category-6);
   --font-sans: var(--font-noto-sans-kr), system-ui, sans-serif;
 }
 

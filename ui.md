@@ -96,6 +96,13 @@ body {
 - 모서리: 카드와 모달 `rounded-2xl`, 버튼과 입력창 `rounded-lg`, 카테고리 칩 `rounded-full`.
 - 그림자: 기본은 `shadow-sm`, 카드 hover만 `hover:shadow-md`. 그 이상 진한 그림자는 쓰지 않는다.
 
+### 2.4 카테고리 색
+
+카테고리 바의 칩과 카드의 카테고리 배지는 카테고리마다 색 하나를 쓴다. `globals.css`에 `--category-1` ~ `--category-6`(violet, sky, emerald, rose, amber, fuchsia)을 두고 `@theme inline`에 `--color-category-N`으로 연결한다. 라이트 모드는 글자로 써도 대비가 충분한 700 계열, 다크 모드는 400 계열을 쓴다. 칩 배경은 같은 색의 `/10` 투명도로 만든다.
+
+- 카테고리 → 색은 `src/lib/category-color.ts`의 `categoryTone(id)`로 정한다 (`id % 6`). 다른 카테고리를 지워도 색이 바뀌지 않는다.
+- 클래스 이름은 Tailwind가 찾을 수 있게 그 파일에 전체 이름으로 적는다. 컴포넌트에서 문자열을 조립하지 않는다.
+
 ---
 
 ## 3. 화면 구성
@@ -156,9 +163,11 @@ body {
 
 | 상태 | 클래스 |
 |---|---|
-| 기본 | `inline-flex h-9 items-center rounded-full border border-border bg-surface px-4 text-sm font-medium text-foreground/70 hover:border-primary/40 hover:text-foreground` |
-| 선택됨 | `border-primary bg-primary-soft text-primary` (기본 클래스에 덮어쓴다) |
+| 기본 | `inline-flex h-9 items-center gap-2 rounded-full border border-border bg-surface px-4 text-sm font-medium text-foreground/70 hover:text-foreground` + 카테고리 색 테두리 hover (`hover:border-category-N/50`) |
+| 선택됨 | 카테고리 색으로 채운다: `border-category-N bg-category-N/10 text-category-N` |
 
+- 카테고리 칩은 이름 앞에 색 점(`size-2 rounded-full bg-category-N`)을 둔다. 평소에는 점으로만 구분하고, 선택된 칩만 색으로 채워 화면이 산만하지 않게 한다.
+- '전체'는 색 점 없이 선택 시 강조색(`border-primary bg-primary-soft text-primary`), '미분류'는 회색 점(`bg-muted/50`)에 선택 시 `border-foreground/30 bg-foreground/5 text-foreground`를 쓴다.
 - 선택된 칩에는 `aria-current="page"`를 붙인다.
 - 칩에 해당 카테고리의 기사 수를 붙일 수 있다: `<span className="ml-1.5 text-xs text-muted">12</span>`
 - 필터 상태는 URL 쿼리(`?category=<id>`, 미분류는 `?category=none`)로 관리해 새로고침, 공유, 뒤로 가기가 동작하게 한다.
@@ -252,7 +261,7 @@ body {
 ```
 
 - 미분류는 회색으로 표시한다: `bg-foreground/5 text-muted`.
-- 카테고리별로 색을 다르게 하지 않는다. 카테고리가 늘어나면 색 구분이 의미를 잃고 화면이 산만해진다.
+- 카테고리 배지는 카테고리 바 칩과 같은 카테고리 색(2.4)을 쓴다: `categoryTone(id).badge` = `bg-category-N/10 text-category-N`. 위 예시의 `bg-primary-soft text-primary` 대신 이것을 쓴다.
 
 ### 4.3 버튼
 

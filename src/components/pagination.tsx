@@ -1,14 +1,11 @@
 import Link from "next/link";
+import { dashboardHref, type CategoryFilter } from "@/lib/dashboard-href";
 
 const ITEM =
   "inline-flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 const IDLE = `${ITEM} border border-border bg-surface text-foreground hover:bg-foreground/5`;
 const CURRENT = `${ITEM} bg-primary text-white`;
 const DISABLED = `${ITEM} border border-border bg-surface text-muted opacity-60`;
-
-function pageHref(page: number) {
-  return page === 1 ? "/dashboard" : `/dashboard?page=${page}`;
-}
 
 // 처음·끝·현재 주변 페이지만 보여주고 나머지는 '…'로 줄인다
 function visiblePages(current: number, total: number): (number | "gap")[] {
@@ -23,8 +20,18 @@ function visiblePages(current: number, total: number): (number | "gap")[] {
   return pages;
 }
 
-export function Pagination({ page, totalPages }: { page: number; totalPages: number }) {
+export function Pagination({
+  page,
+  totalPages,
+  category,
+}: {
+  page: number;
+  totalPages: number;
+  category: CategoryFilter;
+}) {
   if (totalPages <= 1) return null;
+  // 페이지를 옮겨도 선택한 카테고리 필터는 유지한다
+  const pageHref = (p: number) => dashboardHref({ category, page: p });
 
   return (
     <nav aria-label="페이지" className="mt-8 flex justify-center">
