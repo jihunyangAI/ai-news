@@ -102,6 +102,7 @@ body {
 
 - 카테고리 → 색은 `src/lib/category-color.ts`의 `categoryTone(id)`로 정한다 (`id % 6`). 다른 카테고리를 지워도 색이 바뀌지 않는다.
 - 클래스 이름은 Tailwind가 찾을 수 있게 그 파일에 전체 이름으로 적는다. 컴포넌트에서 문자열을 조립하지 않는다.
+- 개발 서버(Turbopack)가 `category-color.ts`를 스캔하지 못해 색이 빠지는 일이 있어, `globals.css`의 `@source inline(...)`에도 같은 클래스를 등록한다. 카테고리 색 클래스를 새로 쓰면 두 곳을 함께 고친다.
 
 ---
 

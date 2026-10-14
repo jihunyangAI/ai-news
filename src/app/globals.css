@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* 카테고리 색 클래스는 src/lib/category-color.ts에서 id로 고른다. 개발 서버가 그 파일을
+   스캔하지 못하는 경우가 있어 항상 만들어지도록 여기에 등록한다 (ui.md 2.4) */
+@source inline("bg-category-{1..6} bg-category-{1..6}/10 text-category-{1..6} border-category-{1..6} hover:border-category-{1..6}/50");
+
 /* 디자인 토큰. 규칙은 ui.md 2장 참고 */
 :root {
   --background: #f8fafc;
@@ -12,8 +16,7 @@
   --primary-soft: #eff6ff;
   --danger: #dc2626;
   --success: #16a34a;
-  /* 카테고리 색 (ui.md 2.4). 글자에도 쓰므로 밝은 배경에서 대비가 충분한 700 계열.
-     클래스 매핑은 src/lib/category-color.ts */
+  /* 카테고리 색 (ui.md 2.4). 글자에도 쓰므로 밝은 배경에서 대비가 충분한 700 계열 */
   --category-1: #6d28d9; /* violet */
   --category-2: #0369a1; /* sky */
   --category-3: #047857; /* emerald */
