@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { fetchNews, type FetchNewsState } from "@/app/dashboard/actions";
 import { NEWS_SOURCES } from "@/lib/rss/sources";
-
-type Toast = { message: string; tone: "info" | "error" };
+import { Toast, type ToastMessage } from "./toast";
 
 // 번역 결과 문구. 실패나 미룬 기사는 다음 가져오기 때 다시 처리된다는 점을 함께 알린다.
 function enrichMessage({ processed, failed, remaining }: { processed: number; failed: number; remaining: number }) {
@@ -15,7 +14,7 @@ function enrichMessage({ processed, failed, remaining }: { processed: number; fa
   return parts.join(" ");
 }
 
-function toToast(state: FetchNewsState): Toast {
+function toToast(state: FetchNewsState): ToastMessage {
   if (!state.ok) return { message: state.error, tone: "error" };
 
   const { added, failedSources, failed } = state;
@@ -37,19 +36,17 @@ function toToast(state: FetchNewsState): Toast {
 
 export function FetchNewsButton() {
   const [isPending, startTransition] = useTransition();
-  const [toast, setToast] = useState<Toast | null>(null);
-
-  // 일반 토스트는 4초 뒤 사라지고, 오류 토스트는 닫을 때까지 남는다 (ui.md 4.5)
-  useEffect(() => {
-    if (toast?.tone !== "info") return;
-    const timer = setTimeout(() => setToast(null), 4000);
-    return () => clearTimeout(timer);
-  }, [toast]);
+  const [toast, setToast] = useState<ToastMessage | null>(null);
 
   function handleClick() {
     setToast(null);
     startTransition(async () => {
-      setToast(toToast(await fetchNews()));
+      try {
+        setToast(toToast(await fetchNews()));
+      } catch {
+        // 네트워크 끊김 등으로 액션 호출 자체가 실패하면 에러 바운더리 대신 토스트로 알린다
+        setToast({ message: "뉴스를 가져오지 못했어요. 잠시 후 다시 시도해 주세요.", tone: "error" });
+      }
     });
   }
 
@@ -75,24 +72,7 @@ export function FetchNewsButton() {
         )}
       </button>
 
-      {toast && (
-        <div
-          role={toast.tone === "error" ? "alert" : "status"}
-          className="fixed inset-x-4 bottom-6 z-20 flex items-center justify-between gap-3 rounded-xl bg-foreground px-4 py-3 text-sm text-background shadow-lg sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2"
-        >
-          <span>{toast.message}</span>
-          {toast.tone === "error" && (
-            <button
-              type="button"
-              onClick={() => setToast(null)}
-              aria-label="닫기"
-              className="shrink-0 rounded px-1 text-background/70 hover:text-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              ✕
-            </button>
-          )}
-        </div>
-      )}
+      <Toast toast={toast} onClose={() => setToast(null)} />
     </>
   );
 }

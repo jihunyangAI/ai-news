@@ -1,5 +1,5 @@
 // ui.md 4.3 버튼, 4.4 입력창 클래스. 여러 컴포넌트가 같이 쓰므로 한곳에 모은다.
-const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+export const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 export const PRIMARY_BUTTON = `inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-medium text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60 ${FOCUS}`;
 export const SECONDARY_BUTTON = `inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-border bg-surface px-3 text-sm font-medium text-foreground hover:bg-foreground/5 disabled:opacity-60 ${FOCUS}`;

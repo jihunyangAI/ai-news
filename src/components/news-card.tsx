@@ -1,6 +1,7 @@
 import type { ArticleCard } from "@/lib/articles";
 import { categoryTone } from "@/lib/category-color";
 import { formatPublishedAt, sourceLabel } from "@/lib/format";
+import { NotionSaveButton } from "./notion-save-button";
 
 function CategoryBadge({ colorIndex, name }: { colorIndex: number | null; name: string | null }) {
   // 카테고리 바 칩과 같은 카테고리 색, 미분류는 회색 (ui.md 4.2)
@@ -48,6 +49,7 @@ export function NewsCard({ article, colorIndex }: { article: ArticleCard; colorI
         >
           원문 보기 ↗
         </a>
+        <NotionSaveButton articleId={article.id} savedUrl={article.notionPageUrl} />
       </div>
     </article>
   );

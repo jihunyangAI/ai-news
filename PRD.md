@@ -68,10 +68,11 @@
 - 추가·수정은 이후 새로 가져오는 기사부터 적용된다. 기존 기사는 다시 분류하지 않는다.
 - 이름은 중복될 수 없다.
 
-### F7. Notion 저장 (Claude API + Notion MCP)
-- 카드의 'Notion 저장'을 누르면 서버가 Claude API의 MCP 커넥터로 Notion 원격 MCP 서버를 호출해 페이지를 만든다.
+### F7. Notion 저장 (Notion API)
+- 카드의 'Notion 저장'을 누르면 서버가 Notion API(내부 integration 토큰)로 저장용 데이터베이스에 행(페이지)을 만든다. Claude는 호출하지 않는다.
 - 저장 내용: 한국어 제목, 요약, 카테고리, 출처, 원문 URL, 발행일.
-- 저장 대상은 앱 운영자의 Notion 워크스페이스 하나다 (데이터 공유 구조이므로).
+- 저장 대상은 앱 운영자의 Notion 워크스페이스에 있는 'AI 뉴스 저장함' 데이터베이스 하나다 (데이터 공유 구조이므로). 속성은 제목(title)·카테고리(select)·출처(select)·원문 링크(url)·발행일(date)·저장일(created time)이고, 요약은 페이지 본문에 넣는다.
+- 처음에는 Claude API의 MCP 커넥터 + Notion 원격 MCP 서버로 계획했으나, Vercel AI Gateway가 MCP 커넥터 요청(`mcp_toolset` 도구)을 400으로 거절해서 Notion API 직접 호출로 바꿨다 (2026-10-15 시험).
 - 저장에 성공하면 Notion 페이지 URL을 DB에 기록하고, 카드 버튼을 '저장됨'(Notion 링크)으로 바꾼다.
 - 이미 저장한 기사는 다시 저장하지 않는다.
 - 실패하면 오류 메시지를 보여주고 다시 시도할 수 있게 한다.
@@ -89,7 +90,7 @@
 [Notion 저장]
   articleId 전달
   → 이미 저장됐는지 확인
-  → Claude API (MCP 커넥터 → Notion MCP)로 페이지 생성
+  → Notion API로 저장용 데이터베이스에 페이지 생성
   → notion_saves에 페이지 URL 기록
   → 카드 상태 '저장됨'
 ```
@@ -135,14 +136,14 @@
 | 인증 | Clerk |
 | DB | Neon (Postgres) + Drizzle ORM |
 | 번역·요약·분류 | Claude API (Vercel AI Gateway 경유) |
-| Notion 저장 | Claude API MCP 커넥터 + Notion 원격 MCP 서버 |
+| Notion 저장 | Notion API (`@notionhq/client`, 내부 integration 토큰) |
 
 ### 환경변수 (예상)
 - `CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`
 - `DATABASE_URL` (Neon)
 - `AI_GATEWAY_API_KEY` (번역·요약·분류, Vercel AI Gateway)
-- `ANTHROPIC_API_KEY` (Notion 저장의 MCP 커넥터)
-- Notion OAuth 토큰 및 저장 대상 ID (방식은 8장 미결 사항에 따라 결정)
+- `NOTION_TOKEN` (Notion 내부 integration 토큰. 콘텐츠 읽기·삽입 권한만 켠다)
+- `NOTION_DATABASE_ID` (저장용 데이터베이스 ID. integration에 연결되어 있어야 한다)
 
 ## 8. 비기능 요구사항
 - **보안**: API 키와 Notion 토큰은 서버에서만 쓴다. 모든 API 라우트에서 로그인 여부를 확인한다.
@@ -154,8 +155,8 @@
 
 | # | 항목 | 제안 기본값 |
 |---|---|---|
-| 1 | Notion 저장 위치 (데이터베이스 행 vs 페이지 하위 페이지) | 데이터베이스 행. 카테고리·날짜를 속성으로 걸러볼 수 있다. |
-| 2 | Notion OAuth 토큰 발급·갱신 방식 | 앱에 운영자용 Notion 연결 화면을 두고 토큰을 DB에 저장, 만료 시 갱신 |
+| 1 | Notion 저장 위치 (데이터베이스 행 vs 페이지 하위 페이지) | **결정**: 데이터베이스 행 ('AI 뉴스 저장함'). |
+| 2 | Notion OAuth 토큰 발급·갱신 방식 | **결정**: OAuth를 쓰지 않는다. 만료 없는 내부 integration 토큰을 환경변수로 둔다. |
 | 3 | 초기 카테고리 목록 | 모델·연구 / 제품·서비스 / 투자·비즈니스 / 정책·규제 / 기타 |
 | 4 | 저장된 카드 표시 | '저장됨' + Notion 링크로 바꾸고 재저장 불가 (F7에 반영) |
 

@@ -1,6 +1,6 @@
 import { asc, count, desc, eq, isNull, type SQL } from "drizzle-orm";
 import { db } from "@/db";
-import { articles, categories } from "@/db/schema";
+import { articles, categories, notionSaves } from "@/db/schema";
 import type { CategoryFilter } from "./dashboard-href";
 
 export type ArticleCard = Awaited<ReturnType<typeof getArticles>>[number];
@@ -28,9 +28,12 @@ export async function getArticles({ page, category }: { page: number; category: 
       // 카드 배지 색을 고를 때 이 카테고리의 순서를 찾는 데 쓴다
       categoryId: categories.id,
       categoryName: categories.name,
+      // null = 아직 Notion에 저장하지 않은 기사
+      notionPageUrl: notionSaves.notionPageUrl,
     })
     .from(articles)
     .leftJoin(categories, eq(articles.categoryId, categories.id))
+    .leftJoin(notionSaves, eq(notionSaves.articleId, articles.id))
     .where(categoryCondition(category))
     .orderBy(desc(articles.publishedAt), desc(articles.id))
     .limit(ARTICLES_PER_PAGE)
