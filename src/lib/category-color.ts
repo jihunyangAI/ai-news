@@ -6,11 +6,15 @@ const TONES = [
   { dot: "bg-category-4", hover: "hover:border-category-4/50", active: "border-category-4 bg-category-4/10 text-category-4", badge: "bg-category-4/10 text-category-4" },
   { dot: "bg-category-5", hover: "hover:border-category-5/50", active: "border-category-5 bg-category-5/10 text-category-5", badge: "bg-category-5/10 text-category-5" },
   { dot: "bg-category-6", hover: "hover:border-category-6/50", active: "border-category-6 bg-category-6/10 text-category-6", badge: "bg-category-6/10 text-category-6" },
+  { dot: "bg-category-7", hover: "hover:border-category-7/50", active: "border-category-7 bg-category-7/10 text-category-7", badge: "bg-category-7/10 text-category-7" },
+  { dot: "bg-category-8", hover: "hover:border-category-8/50", active: "border-category-8 bg-category-8/10 text-category-8", badge: "bg-category-8/10 text-category-8" },
+  { dot: "bg-category-9", hover: "hover:border-category-9/50", active: "border-category-9 bg-category-9/10 text-category-9", badge: "bg-category-9/10 text-category-9" },
+  { dot: "bg-category-10", hover: "hover:border-category-10/50", active: "border-category-10 bg-category-10/10 text-category-10", badge: "bg-category-10/10 text-category-10" },
 ] as const;
 
 export type CategoryTone = (typeof TONES)[number];
 
-// 카테고리 목록(생성순)에서의 순서로 색을 고른다. 6개까지는 색이 겹치지 않는다.
+// 카테고리 목록(생성순)에서의 순서로 색을 고른다. 10개까지는 색이 겹치지 않는다.
 // 중간 카테고리를 지우면 그 뒤 카테고리의 색이 하나씩 당겨진다.
 export function categoryTone(index: number): CategoryTone {
   return TONES[index % TONES.length];

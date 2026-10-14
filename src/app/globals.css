@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
-/* 카테고리 색 클래스는 src/lib/category-color.ts에서 id로 고른다. 개발 서버가 그 파일을
+/* 카테고리 색 클래스는 src/lib/category-color.ts에서 목록 순서로 고른다. 개발 서버가 그 파일을
    스캔하지 못하는 경우가 있어 항상 만들어지도록 여기에 등록한다 (ui.md 2.4) */
-@source inline("bg-category-{1..6} bg-category-{1..6}/10 text-category-{1..6} border-category-{1..6} hover:border-category-{1..6}/50");
+@source inline("bg-category-{1..10} bg-category-{1..10}/10 text-category-{1..10} border-category-{1..10} hover:border-category-{1..10}/50");
 
 /* 디자인 토큰. 규칙은 ui.md 2장 참고 */
 :root {
@@ -23,6 +23,10 @@
   --category-4: #be123c; /* rose */
   --category-5: #b45309; /* amber */
   --category-6: #a21caf; /* fuchsia */
+  --category-7: #0f766e; /* teal */
+  --category-8: #c2410c; /* orange */
+  --category-9: #4338ca; /* indigo */
+  --category-10: #4d7c0f; /* lime */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -43,6 +47,10 @@
     --category-4: #fb7185;
     --category-5: #fbbf24;
     --category-6: #e879f9;
+    --category-7: #2dd4bf;
+    --category-8: #fb923c;
+    --category-9: #818cf8;
+    --category-10: #a3e635;
   }
 }
 
@@ -63,6 +71,10 @@
   --color-category-4: var(--category-4);
   --color-category-5: var(--category-5);
   --color-category-6: var(--category-6);
+  --color-category-7: var(--category-7);
+  --color-category-8: var(--category-8);
+  --color-category-9: var(--category-9);
+  --color-category-10: var(--category-10);
   --font-sans: var(--font-noto-sans-kr), system-ui, sans-serif;
 }
 
