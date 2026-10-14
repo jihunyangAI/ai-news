@@ -37,11 +37,16 @@ export async function getArticles({ page, category }: { page: number; category: 
     .offset((page - 1) * ARTICLES_PER_PAGE);
 }
 
-// 카테고리 바용: 생성순 카테고리별 기사 수와 미분류 기사 수
+// 카테고리 바와 카테고리 관리 화면용: 생성순 카테고리별 기사 수와 미분류 기사 수
 export async function getCategoryCounts() {
   const [byCategory, [uncategorized]] = await Promise.all([
     db
-      .select({ id: categories.id, name: categories.name, count: count(articles.id) })
+      .select({
+        id: categories.id,
+        name: categories.name,
+        description: categories.description,
+        count: count(articles.id),
+      })
       .from(categories)
       .leftJoin(articles, eq(articles.categoryId, categories.id))
       .groupBy(categories.id)

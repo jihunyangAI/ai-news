@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AddCategoryDialog } from "@/components/add-category-dialog";
 import { categoryTone } from "@/lib/category-color";
 import { dashboardHref, type CategoryFilter } from "@/lib/dashboard-href";
 
@@ -42,7 +43,7 @@ function CategoryChip({
   );
 }
 
-// 순서: 전체 → 카테고리(생성순) → 미분류 (ui.md 3.3). 카테고리는 색 점으로 구분하고, 선택된 칩은 그 색으로 채운다.
+// 순서: 전체 → 카테고리(생성순) → 미분류 → 카테고리 추가 (ui.md 3.3). 카테고리는 색 점으로 구분하고, 선택된 칩은 그 색으로 채운다.
 export function CategoryBar({
   active,
   categories,
@@ -73,6 +74,9 @@ export function CategoryBar({
           <CategoryChip category="none" active={active === "none"} count={uncategorized} style={NONE_STYLE}>
             미분류
           </CategoryChip>
+        </li>
+        <li>
+          <AddCategoryDialog />
         </li>
       </ul>
     </nav>
