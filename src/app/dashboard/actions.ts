@@ -2,10 +2,11 @@
 
 import { refresh } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
+import { enrichPendingArticles, type EnrichResult } from "@/lib/enrich";
 import { importLatestArticles, type IngestResult } from "@/lib/ingest";
 
 export type FetchNewsState =
-  | ({ ok: true } & IngestResult)
+  | ({ ok: true } & IngestResult & EnrichResult)
   | { ok: false; error: string };
 
 export async function fetchNews(): Promise<FetchNewsState> {
@@ -14,9 +15,11 @@ export async function fetchNews(): Promise<FetchNewsState> {
   if (!userId) return { ok: false, error: "로그인이 필요해요." };
 
   try {
-    const result = await importLatestArticles();
+    const ingest = await importLatestArticles();
+    // 원문 저장이 끝난 뒤 Claude로 번역·요약·분류한다. 이번에 못 한 기사는 다음 가져오기 때 이어서 처리한다.
+    const enrich = await enrichPendingArticles();
     refresh();
-    return { ok: true, ...result };
+    return { ok: true, ...ingest, ...enrich };
   } catch (error) {
     console.error("[fetchNews] 뉴스 가져오기 실패", error);
     return { ok: false, error: "뉴스를 가져오지 못했어요. 잠시 후 다시 시도해 주세요." };

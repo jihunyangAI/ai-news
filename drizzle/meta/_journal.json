@@ -15,6 +15,13 @@
       "when": 1791915307848,
       "tag": "0001_raw_articles",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791995570383,
+      "tag": "0002_seed_categories",
+      "breakpoints": true
     }
   ]
 }

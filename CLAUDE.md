@@ -38,10 +38,12 @@ AI 뉴스 카드 앱: RSS → Claude(번역·요약·분류) → 카드 → 선�
   - 새 기사 1건당 Claude 호출은 **1회**(Haiku 계열 모델)다. 응답 JSON은 `titleKo`, `summaryKo`(3~4문장), `categoryId | null`이다. 프롬프트에는 현재 카테고리 목록(이름 + 설명)을 넣는다.
   - 최근 24시간 안에 발행된 기사만 가져온다. 기사는 RSS 원문(`originalTitle`, `description`)으로 먼저 저장하고 `titleKo`·`summaryKo`는 null로 둔다. 카드는 null이면 원문 제목과 description을 대신 보여준다.
   - 응답은 `zod`로 검증한다. Claude 처리 대상은 `titleKo`가 null인 기사이며, 실패하면 null로 남아 다음 가져오기 때 다시 시도된다.
-  - rate limit에 대비해 동시 처리 개수를 제한하고 병렬로 처리한다.
+  - rate limit에 대비해 동시 처리 개수를 제한하고 병렬로 처리한다. 한 번의 가져오기에서 처리하는 기사는 최대 20건이고, 나머지는 다음 가져오기 때 처리한다 (`src/lib/enrich.ts`).
+  - Claude는 `@anthropic-ai/sdk`로 호출하되 **Vercel AI Gateway**(`AI_GATEWAY_API_KEY`)를 거친다. Anthropic 직접 결제가 막혀 우회한 것이다. 클라이언트 설정은 `src/lib/ai/client.ts` 한 곳에만 있으므로, Anthropic으로 직접 연결할 때는 이 파일만 바꾼다. 모델 ID는 Anthropic 공식 ID(`claude-haiku-5-5`)를 쓴다.
+  - 초기 카테고리 5개는 마이그레이션 `drizzle/0002_seed_categories.sql`로 넣는다.
 - **Notion 저장**: 서버가 Claude API의 **MCP 커넥터**로 Notion 원격 MCP 서버를 호출한다. 저장 대상은 운영자의 Notion 워크스페이스 하나이고, 페이지 URL을 `notion_saves`에 기록한다. 저장 위치와 OAuth 토큰 처리 방식은 아직 미결이다 (PRD 9장).
 - **카테고리 변경**은 이후 가져오는 기사부터 적용된다. 기존 기사는 다시 분류하지 않는다.
 
 ## 환경변수
 
-`.env.example`을 `.env.local`로 복사해서 쓴다. Clerk publishable key에는 `NEXT_PUBLIC_` 접두사가 필요하다. `ANTHROPIC_API_KEY`와 Notion 토큰은 서버에서만 쓴다.
+`.env.example`을 `.env.local`로 복사해서 쓴다. Clerk publishable key에는 `NEXT_PUBLIC_` 접두사가 필요하다. `AI_GATEWAY_API_KEY`, `ANTHROPIC_API_KEY`, Notion 토큰은 서버에서만 쓴다.

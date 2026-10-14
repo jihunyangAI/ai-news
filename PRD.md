@@ -52,6 +52,7 @@
 - 어떤 카테고리에도 맞지 않으면 '미분류'(null)로 둔다.
 - 모델: 비용·속도를 위해 Haiku 계열을 기본으로 쓴다.
 - 기사는 RSS 원문(제목, description)으로 먼저 저장한다. 한국어 제목·요약이 비어 있는(null) 기사가 처리 대상이며, 실패하면 null로 남아 다음 '뉴스 가져오기' 때 다시 시도된다.
+- 한 번의 '뉴스 가져오기'에서 처리하는 기사는 최신순 최대 20건이다. 나머지는 다음 가져오기 때 처리한다 (버튼 응답 시간 제한).
 
 ### F4. 뉴스 카드 목록
 - 카드 항목: 한국어 제목, 한국어 요약, 카테고리, 출처, 발행일, 원문 링크, Notion 저장 버튼.
@@ -133,13 +134,14 @@
 | 프레임워크 | Next.js (App Router) |
 | 인증 | Clerk |
 | DB | Neon (Postgres) + Drizzle ORM |
-| 번역·요약·분류 | Claude API |
+| 번역·요약·분류 | Claude API (Vercel AI Gateway 경유) |
 | Notion 저장 | Claude API MCP 커넥터 + Notion 원격 MCP 서버 |
 
 ### 환경변수 (예상)
 - `CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`
 - `DATABASE_URL` (Neon)
-- `ANTHROPIC_API_KEY`
+- `AI_GATEWAY_API_KEY` (번역·요약·분류, Vercel AI Gateway)
+- `ANTHROPIC_API_KEY` (Notion 저장의 MCP 커넥터)
 - Notion OAuth 토큰 및 저장 대상 ID (방식은 8장 미결 사항에 따라 결정)
 
 ## 8. 비기능 요구사항
