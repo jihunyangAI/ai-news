@@ -19,12 +19,14 @@ const NONE_STYLE: ChipStyle = {
 
 function CategoryChip({
   category,
+  q,
   active,
   count,
   style,
   children,
 }: {
   category: CategoryFilter;
+  q: string;
   active: boolean;
   count: number;
   style: ChipStyle;
@@ -32,7 +34,7 @@ function CategoryChip({
 }) {
   return (
     <Link
-      href={dashboardHref({ category })}
+      href={dashboardHref({ category, q })}
       aria-current={active ? "page" : undefined}
       className={`${CHIP} ${active ? style.active : `${IDLE} ${style.hover}`}`}
     >
@@ -44,34 +46,37 @@ function CategoryChip({
 }
 
 // 순서: 전체 → 카테고리(생성순) → 미분류 → 카테고리 추가 (ui.md 3.3). 카테고리는 색 점으로 구분하고, 선택된 칩은 그 색으로 채운다.
+// 검색 중이면 칩을 눌러도 검색어를 유지하고, 칩의 수는 검색에 걸린 기사 수다.
 export function CategoryBar({
   active,
+  q = "",
   categories,
   uncategorized,
   total,
 }: {
   active: CategoryFilter;
+  q?: string;
   categories: { id: number; name: string; count: number }[];
   uncategorized: number;
   total: number;
 }) {
   return (
-    <nav aria-label="카테고리" className="-mx-4 mt-6 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+    <nav aria-label="카테고리" className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0 lg:min-w-0 lg:flex-1">
       <ul className="flex items-center gap-2 whitespace-nowrap sm:flex-wrap">
         <li>
-          <CategoryChip category={null} active={active === null} count={total} style={ALL_STYLE}>
+          <CategoryChip q={q} category={null} active={active === null} count={total} style={ALL_STYLE}>
             전체
           </CategoryChip>
         </li>
         {categories.map((c, index) => (
           <li key={c.id}>
-            <CategoryChip category={c.id} active={active === c.id} count={c.count} style={categoryTone(index)}>
+            <CategoryChip q={q} category={c.id} active={active === c.id} count={c.count} style={categoryTone(index)}>
               {c.name}
             </CategoryChip>
           </li>
         ))}
         <li>
-          <CategoryChip category="none" active={active === "none"} count={uncategorized} style={NONE_STYLE}>
+          <CategoryChip q={q} category="none" active={active === "none"} count={uncategorized} style={NONE_STYLE}>
             미분류
           </CategoryChip>
         </li>

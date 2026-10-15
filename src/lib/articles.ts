@@ -1,4 +1,4 @@
-import { asc, count, desc, eq, isNull, type SQL } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, isNull, or, type SQL } from "drizzle-orm";
 import { db } from "@/db";
 import { articles, categories, notionSaves } from "@/db/schema";
 import type { CategoryFilter } from "./dashboard-href";
@@ -13,8 +13,29 @@ function categoryCondition(category: CategoryFilter): SQL | undefined {
   return eq(articles.categoryId, category);
 }
 
+// 검색어가 한국어 제목·요약 또는 원문 제목·description에 들어 있는 기사 (대소문자 무시).
+// 검색어의 %, _, \는 LIKE 특수문자가 아니라 글자 그대로 찾는다.
+function searchCondition(q: string): SQL | undefined {
+  if (!q) return undefined;
+  const pattern = `%${q.replace(/[\\%_]/g, "\\$&")}%`;
+  return or(
+    ilike(articles.titleKo, pattern),
+    ilike(articles.summaryKo, pattern),
+    ilike(articles.originalTitle, pattern),
+    ilike(articles.description, pattern),
+  );
+}
+
 // 발행일 최신순. 카테고리가 없으면(미분류) categoryName은 null이다.
-export async function getArticles({ page, category }: { page: number; category: CategoryFilter }) {
+export async function getArticles({
+  page,
+  category,
+  q = "",
+}: {
+  page: number;
+  category: CategoryFilter;
+  q?: string;
+}) {
   return db
     .select({
       id: articles.id,
@@ -34,14 +55,15 @@ export async function getArticles({ page, category }: { page: number; category: 
     .from(articles)
     .leftJoin(categories, eq(articles.categoryId, categories.id))
     .leftJoin(notionSaves, eq(notionSaves.articleId, articles.id))
-    .where(categoryCondition(category))
+    .where(and(categoryCondition(category), searchCondition(q)))
     .orderBy(desc(articles.publishedAt), desc(articles.id))
     .limit(ARTICLES_PER_PAGE)
     .offset((page - 1) * ARTICLES_PER_PAGE);
 }
 
-// 카테고리 바와 카테고리 관리 화면용: 생성순 카테고리별 기사 수와 미분류 기사 수
-export async function getCategoryCounts() {
+// 카테고리 바와 카테고리 관리 화면용: 생성순 카테고리별 기사 수와 미분류 기사 수.
+// 검색어가 있으면 검색에 걸린 기사만 센다.
+export async function getCategoryCounts(q = "") {
   const [byCategory, [uncategorized]] = await Promise.all([
     db
       .select({
@@ -51,10 +73,14 @@ export async function getCategoryCounts() {
         count: count(articles.id),
       })
       .from(categories)
-      .leftJoin(articles, eq(articles.categoryId, categories.id))
+      // 검색 조건을 ON 절에 둬야 검색 결과가 0건인 카테고리도 목록에 남는다
+      .leftJoin(articles, and(eq(articles.categoryId, categories.id), searchCondition(q)))
       .groupBy(categories.id)
       .orderBy(asc(categories.createdAt), asc(categories.id)),
-    db.select({ count: count() }).from(articles).where(isNull(articles.categoryId)),
+    db
+      .select({ count: count() })
+      .from(articles)
+      .where(and(isNull(articles.categoryId), searchCondition(q))),
   ]);
   return { categories: byCategory, uncategorized: uncategorized.count };
 }
