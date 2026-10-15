@@ -17,6 +17,12 @@ UI 가이드는 `ui.md`다. 화면이나 컴포넌트를 만들거나 고치기 
 - `npm run lint`: ESLint (flat config, `eslint.config.mjs`)
 - 테스트 도구는 아직 설정되지 않았다
 
+### 슬래시 명령 (`.claude/commands/`)
+
+- `/news-workflow [브랜치-이름]`: 새 기능 개발 흐름. 메인 브랜치(`master`) 확인 → 새 브랜치 생성(이름이 없으면 기능을 묻고 영어 소문자-하이픈 이름 제안) → 기술 스택·컨벤션 안내 → 사용자가 '완료'/'done'을 입력하면 변경 파일 목록, lint·build 검사, 커밋 메시지 제안 → 확인 후 커밋하고 `--no-ff`로 메인에 병합 → 작업 요약. push는 따로 요청할 때만 한다.
+- `/new-branch <브랜치-이름>`: 메인으로 이동한 뒤 새 브랜치만 만든다.
+- `/daily-check`: 변경 상태, 최근 커밋 5개, 메인과의 차이를 점검한다.
+
 ## Next.js 버전 주의점
 
 - Next.js 16.4 / React 19.3. AGENTS.md 지시대로, Next.js API를 쓰기 전에 `node_modules/next/dist/docs/`를 먼저 읽는다.
