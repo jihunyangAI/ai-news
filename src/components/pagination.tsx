@@ -24,14 +24,16 @@ export function Pagination({
   page,
   totalPages,
   category,
+  q = "",
 }: {
   page: number;
   totalPages: number;
   category: CategoryFilter;
+  q?: string;
 }) {
   if (totalPages <= 1) return null;
-  // 페이지를 옮겨도 선택한 카테고리 필터는 유지한다
-  const pageHref = (p: number) => dashboardHref({ category, page: p });
+  // 페이지를 옮겨도 선택한 카테고리 필터와 검색어는 유지한다
+  const pageHref = (p: number) => dashboardHref({ category, q, page: p });
 
   return (
     <nav aria-label="페이지" className="mt-8 flex justify-center">
