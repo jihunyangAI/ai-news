@@ -61,6 +61,11 @@ export async function getArticles({
     .offset((page - 1) * ARTICLES_PER_PAGE);
 }
 
+// Notion 저장 기록은 FK가 ON DELETE CASCADE라 같이 지워진다
+export async function deleteArticle(id: number) {
+  await db.delete(articles).where(eq(articles.id, id));
+}
+
 // 카테고리 바와 카테고리 관리 화면용: 생성순 카테고리별 기사 수와 미분류 기사 수.
 // 검색어가 있으면 검색에 걸린 기사만 센다.
 export async function getCategoryCounts(q = "") {

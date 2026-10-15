@@ -2,6 +2,7 @@
 
 import { refresh } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
+import { deleteArticle } from "@/lib/articles";
 import { enrichPendingArticles, type EnrichResult } from "@/lib/enrich";
 import { importLatestArticles, type IngestResult } from "@/lib/ingest";
 import { ArticleNotFoundError, saveArticleToNotion } from "@/lib/notion-save";
@@ -44,4 +45,24 @@ export async function saveToNotion(articleId: number): Promise<SaveToNotionState
     console.error(`[saveToNotion] 기사 ${articleId} 저장 실패`, error);
     return { ok: false, error: "Notion에 저장하지 못했어요. 다시 시도해 주세요." };
   }
+}
+
+export type DeleteNewsState = { ok: true } | { ok: false; error: string };
+
+export async function deleteNews(articleId: number): Promise<DeleteNewsState> {
+  const { userId } = await auth();
+  if (!userId) return { ok: false, error: "로그인이 필요해요." };
+  if (!Number.isInteger(articleId) || articleId <= 0) {
+    return { ok: false, error: "삭제할 뉴스를 찾지 못했어요. 목록을 새로고침해 주세요." };
+  }
+
+  try {
+    // 다른 사람이 먼저 지웠어도 화면에서 사라지면 되므로 성공으로 본다
+    await deleteArticle(articleId);
+  } catch (error) {
+    console.error(`[deleteNews] 기사 ${articleId} 삭제 실패`, error);
+    return { ok: false, error: "뉴스를 삭제하지 못했어요. 다시 시도해 주세요." };
+  }
+  refresh();
+  return { ok: true };
 }

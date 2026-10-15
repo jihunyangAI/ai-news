@@ -1,6 +1,7 @@
 import type { ArticleCard } from "@/lib/articles";
 import { categoryTone } from "@/lib/category-color";
 import { formatPublishedAt, sourceLabel } from "@/lib/format";
+import { DeleteNewsButton } from "./delete-news-button";
 import { NotionSaveButton } from "./notion-save-button";
 
 function CategoryBadge({ colorIndex, name }: { colorIndex: number | null; name: string | null }) {
@@ -19,12 +20,15 @@ export function NewsCard({ article, colorIndex }: { article: ArticleCard; colorI
     <article className="flex h-full flex-col rounded-2xl border border-border bg-surface p-5 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex items-center justify-between gap-2">
         <CategoryBadge colorIndex={colorIndex} name={article.categoryName} />
-        <p className="text-xs text-muted">
-          {sourceLabel(article.source)} ·{" "}
-          <time dateTime={article.publishedAt.toISOString()}>
-            {formatPublishedAt(article.publishedAt)}
-          </time>
-        </p>
+        <div className="flex items-center gap-1">
+          <p className="text-xs text-muted">
+            {sourceLabel(article.source)} ·{" "}
+            <time dateTime={article.publishedAt.toISOString()}>
+              {formatPublishedAt(article.publishedAt)}
+            </time>
+          </p>
+          <DeleteNewsButton articleId={article.id} />
+        </div>
       </div>
 
       <h2
