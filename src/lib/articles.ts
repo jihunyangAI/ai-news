@@ -27,15 +27,7 @@ function searchCondition(q: string): SQL | undefined {
 }
 
 // 발행일 최신순. 카테고리가 없으면(미분류) categoryName은 null이다.
-export async function getArticles({
-  page,
-  category,
-  q = "",
-}: {
-  page: number;
-  category: CategoryFilter;
-  q?: string;
-}) {
+export async function getArticles({ page, category, q = "" }: { page: number; category: CategoryFilter; q?: string }) {
   return db
     .select({
       id: articles.id,

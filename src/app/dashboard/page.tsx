@@ -66,7 +66,10 @@ async function NewsList({ searchParams }: Pick<PageProps<"/dashboard">, "searchP
   const q = parseQuery(params.q);
   const counts = await getCategoryCounts(q);
   const allTotal = counts.categories.reduce((sum, c) => sum + c.count, counts.uncategorized);
-  const category = parseCategory(params.category, counts.categories.map((c) => c.id));
+  const category = parseCategory(
+    params.category,
+    counts.categories.map((c) => c.id),
+  );
   const total =
     category === null
       ? allTotal

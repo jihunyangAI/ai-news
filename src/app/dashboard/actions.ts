@@ -7,9 +7,7 @@ import { enrichPendingArticles, type EnrichResult } from "@/lib/enrich";
 import { importLatestArticles, type IngestResult } from "@/lib/ingest";
 import { ArticleNotFoundError, saveArticleToNotion } from "@/lib/notion-save";
 
-export type FetchNewsState =
-  | ({ ok: true } & IngestResult & EnrichResult)
-  | { ok: false; error: string };
+export type FetchNewsState = ({ ok: true } & IngestResult & EnrichResult) | { ok: false; error: string };
 
 export async function fetchNews(): Promise<FetchNewsState> {
   // Server Actions are reachable by direct POST, so check auth here as well as in proxy.ts

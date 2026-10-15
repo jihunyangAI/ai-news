@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "format": "prettier --write src",
+    "format:check": "prettier --check src"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",
@@ -30,6 +32,7 @@
     "drizzle-kit": "^0.31.11",
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
+    "prettier": "3.9.10",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

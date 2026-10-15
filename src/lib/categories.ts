@@ -28,7 +28,9 @@ async function assertNameAvailable(name: string, exceptId?: number) {
   const [existing] = await db
     .select({ id: categories.id })
     .from(categories)
-    .where(exceptId === undefined ? eq(categories.name, name) : and(eq(categories.name, name), ne(categories.id, exceptId)))
+    .where(
+      exceptId === undefined ? eq(categories.name, name) : and(eq(categories.name, name), ne(categories.id, exceptId)),
+    )
     .limit(1);
   if (existing) throw new DuplicateCategoryNameError();
 }

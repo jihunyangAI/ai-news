@@ -18,7 +18,10 @@ function AddCategoryForm({ onDone }: { onDone: () => void }) {
     <form action={formAction}>
       <CategoryFormFields idPrefix="add-category" state={state} autoFocus />
       <div className="mt-6 flex items-center justify-between gap-3">
-        <Link href="/categories" className="rounded text-sm text-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+        <Link
+          href="/categories"
+          className="rounded text-sm text-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
           카테고리 관리
         </Link>
         <div className="flex gap-2">

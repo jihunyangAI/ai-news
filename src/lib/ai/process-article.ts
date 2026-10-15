@@ -37,10 +37,7 @@ ${categoryLines}`;
 }
 
 // 기사 1건을 Claude 1회 호출로 번역·요약·분류한다. 실패하면 throw하고, 호출한 쪽에서 null로 남겨 다음에 다시 시도한다.
-export async function processArticle(
-  article: ArticleInput,
-  categories: CategoryOption[],
-): Promise<ProcessedArticle> {
+export async function processArticle(article: ArticleInput, categories: CategoryOption[]): Promise<ProcessedArticle> {
   const response = await anthropic.messages.parse({
     model: SUMMARY_MODEL,
     max_tokens: 2048,

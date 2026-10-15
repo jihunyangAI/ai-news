@@ -36,7 +36,10 @@ function readId(formData: FormData) {
 }
 
 // 추가와 수정이 같이 쓰는 검증·저장·오류 변환
-async function submitCategory(formData: FormData, save: (input: CategoryInput) => Promise<void>): Promise<CategoryFormState> {
+async function submitCategory(
+  formData: FormData,
+  save: (input: CategoryInput) => Promise<void>,
+): Promise<CategoryFormState> {
   const values = readValues(formData);
   const parsed = CategoryInput.safeParse(values);
   if (!parsed.success) {

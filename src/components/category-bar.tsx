@@ -10,7 +10,10 @@ const IDLE = "border-border bg-surface text-foreground/70 hover:text-foreground"
 // 칩마다 다른 부분: 앞의 색 점, 마우스를 올렸을 때 테두리, 선택됐을 때 모양
 type ChipStyle = { dot?: string; hover: string; active: string };
 
-const ALL_STYLE: ChipStyle = { hover: "hover:border-primary/40", active: "border-primary bg-primary-soft text-primary" };
+const ALL_STYLE: ChipStyle = {
+  hover: "hover:border-primary/40",
+  active: "border-primary bg-primary-soft text-primary",
+};
 const NONE_STYLE: ChipStyle = {
   dot: "bg-muted/50",
   hover: "hover:border-foreground/30",

@@ -61,7 +61,10 @@ export function FetchNewsButton() {
       >
         {isPending ? (
           <>
-            <span className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" aria-hidden />
+            <span
+              className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+              aria-hidden
+            />
             가져오는 중…
           </>
         ) : (

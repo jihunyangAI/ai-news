@@ -23,18 +23,13 @@ export function NewsCard({ article, colorIndex }: { article: ArticleCard; colorI
         <div className="flex items-center gap-1">
           <p className="text-xs text-muted">
             {sourceLabel(article.source)} ·{" "}
-            <time dateTime={article.publishedAt.toISOString()}>
-              {formatPublishedAt(article.publishedAt)}
-            </time>
+            <time dateTime={article.publishedAt.toISOString()}>{formatPublishedAt(article.publishedAt)}</time>
           </p>
           <DeleteNewsButton articleId={article.id} />
         </div>
       </div>
 
-      <h2
-        title={article.originalTitle}
-        className="mt-3 line-clamp-2 text-base font-semibold leading-snug sm:text-lg"
-      >
+      <h2 title={article.originalTitle} className="mt-3 line-clamp-2 text-base font-semibold leading-snug sm:text-lg">
         {/* Claude 처리 전에는 원문 제목과 RSS 본문을 대신 보여준다 */}
         {article.titleKo ?? article.originalTitle}
       </h2>
