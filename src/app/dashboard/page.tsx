@@ -101,7 +101,9 @@ async function NewsList({ searchParams }: Pick<PageProps<"/dashboard">, "searchP
   const colorIndexById = new Map(counts.categories.map((c, index) => [c.id, index]));
 
   return (
-    <>
+    // 카테고리 칩이나 페이지 링크로 이동하는 동안(LinkPending의 data-link-pending) 기존 카드를 흐리게 하고 마우스 클릭을 막는다.
+    // CSS만으로 처리하므로 키보드 조작은 막지 못한다.
+    <div className="group/list">
       {/* 전체 수는 제목 옆 배지에 있으니, 검색할 때만 결과 수를 따로 보여준다 */}
       {q && <p className="mt-1 text-sm text-muted">{`'${q}' 검색 결과 ${total}건`}</p>}
       {/* 넓은 화면에서는 카테고리 줄 오른쪽 끝에 검색창, 좁은 화면에서는 카테고리 아래에 둔다 */}
@@ -138,7 +140,7 @@ async function NewsList({ searchParams }: Pick<PageProps<"/dashboard">, "searchP
           </Link>
         </div>
       ) : (
-        <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-6 grid grid-cols-1 gap-4 transition-opacity sm:grid-cols-2 lg:grid-cols-3 group-has-[[data-link-pending]]/list:pointer-events-none group-has-[[data-link-pending]]/list:opacity-50">
           {articles.map((article) => (
             <li key={article.id}>
               <NewsCard
@@ -150,6 +152,6 @@ async function NewsList({ searchParams }: Pick<PageProps<"/dashboard">, "searchP
         </ul>
       )}
       <Pagination page={page} totalPages={totalPages} category={category} q={q} />
-    </>
+    </div>
   );
 }

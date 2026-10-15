@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { dashboardHref, type CategoryFilter } from "@/lib/dashboard-href";
+import { LinkPending } from "./link-pending";
 
 const ITEM =
   "inline-flex h-9 min-w-9 items-center justify-center rounded-lg px-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
@@ -41,7 +42,7 @@ export function Pagination({
         <li>
           {page > 1 ? (
             <Link href={pageHref(page - 1)} className={IDLE}>
-              이전
+              <LinkPending>이전</LinkPending>
             </Link>
           ) : (
             <span aria-disabled className={DISABLED}>
@@ -61,7 +62,7 @@ export function Pagination({
                 aria-current={p === page ? "page" : undefined}
                 className={p === page ? CURRENT : IDLE}
               >
-                {p}
+                <LinkPending>{p}</LinkPending>
               </Link>
             </li>
           ),
@@ -69,7 +70,7 @@ export function Pagination({
         <li>
           {page < totalPages ? (
             <Link href={pageHref(page + 1)} className={IDLE}>
-              다음
+              <LinkPending>다음</LinkPending>
             </Link>
           ) : (
             <span aria-disabled className={DISABLED}>
