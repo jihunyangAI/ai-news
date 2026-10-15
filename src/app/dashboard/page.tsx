@@ -10,7 +10,8 @@ import { NewsCard, NewsGridSkeleton } from "@/components/news-card";
 import { Pagination } from "@/components/pagination";
 import { SEARCH_MAX_LENGTH, SearchForm } from "@/components/search-form";
 import { TEXT_BUTTON } from "@/components/ui-classes";
-import { ARTICLES_PER_PAGE, getArticles, getCategoryCounts } from "@/lib/articles";
+import { NewsCountBadge, NewsCountBadgeSkeleton } from "@/components/news-count-badge";
+import { ARTICLES_PER_PAGE, getArticleCount, getArticles, getCategoryCounts } from "@/lib/articles";
 import { dashboardHref, type CategoryFilter } from "@/lib/dashboard-href";
 
 export const metadata: Metadata = {
@@ -20,7 +21,12 @@ export const metadata: Metadata = {
 export default function DashboardPage({ searchParams }: PageProps<"/dashboard">) {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold tracking-tight">뉴스 대시보드</h1>
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-tight">뉴스 대시보드</h1>
+        <Suspense fallback={<NewsCountBadgeSkeleton />}>
+          <NewsCount />
+        </Suspense>
+      </div>
       <Suspense
         fallback={
           <div className="mt-12">
@@ -52,6 +58,16 @@ function parseCategory(value: string | string[] | undefined, categoryIds: number
 function parseQuery(value: string | string[] | undefined) {
   const raw = Array.isArray(value) ? value[0] : value;
   return (raw ?? "").trim().slice(0, SEARCH_MAX_LENGTH);
+}
+
+// 필터·검색과 관계없는 전체 기사 수. 가져오기·삭제 뒤 서버 액션의 refresh()로 함께 갱신된다.
+async function NewsCount() {
+  await connection();
+
+  const { userId } = await auth();
+  if (!userId) redirect("/");
+
+  return <NewsCountBadge count={await getArticleCount()} />;
 }
 
 async function NewsList({ searchParams }: Pick<PageProps<"/dashboard">, "searchParams">) {
@@ -86,7 +102,8 @@ async function NewsList({ searchParams }: Pick<PageProps<"/dashboard">, "searchP
 
   return (
     <>
-      <p className="mt-1 text-sm text-muted">{q ? `'${q}' 검색 결과 ${total}건` : `총 ${total}건`}</p>
+      {/* 전체 수는 제목 옆 배지에 있으니, 검색할 때만 결과 수를 따로 보여준다 */}
+      {q && <p className="mt-1 text-sm text-muted">{`'${q}' 검색 결과 ${total}건`}</p>}
       {/* 넓은 화면에서는 카테고리 줄 오른쪽 끝에 검색창, 좁은 화면에서는 카테고리 아래에 둔다 */}
       <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-start lg:gap-4">
         <CategoryBar

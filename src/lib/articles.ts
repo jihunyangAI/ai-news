@@ -53,6 +53,12 @@ export async function getArticles({ page, category, q = "" }: { page: number; ca
     .offset((page - 1) * ARTICLES_PER_PAGE);
 }
 
+// 대시보드 상단 배지용: 필터·검색과 관계없이 DB에 있는 전체 기사 수
+export async function getArticleCount() {
+  const [row] = await db.select({ count: count() }).from(articles);
+  return row.count;
+}
+
 // Notion 저장 기록은 FK가 ON DELETE CASCADE라 같이 지워진다
 export async function deleteArticle(id: number) {
   await db.delete(articles).where(eq(articles.id, id));
