@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AddCategoryDialog } from "@/components/add-category-dialog";
+import { LinkPending } from "./link-pending";
 import { categoryTone } from "@/lib/category-color";
 import { dashboardHref, type CategoryFilter } from "@/lib/dashboard-href";
 
@@ -43,7 +44,9 @@ function CategoryChip({
     >
       {style.dot && <span aria-hidden className={`size-2 shrink-0 rounded-full ${style.dot}`} />}
       {children}
-      <span className={`text-xs ${active ? "opacity-70" : "text-muted"}`}>{count}</span>
+      <span className={`text-xs ${active ? "opacity-70" : "text-muted"}`}>
+        <LinkPending>{count}</LinkPending>
+      </span>
     </Link>
   );
 }
