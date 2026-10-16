@@ -83,9 +83,9 @@ body {
 |---|---|
 | 앱 이름 (헤더) | `text-lg font-bold tracking-tight` |
 | 페이지 제목 | `text-2xl font-bold tracking-tight` |
-| 카드 제목 | `text-base font-semibold leading-snug sm:text-lg` |
-| 카드 요약 | `text-[15px] leading-7 text-foreground/80` |
-| 메타 정보 (출처, 날짜) | `text-xs text-muted` |
+| 카드 제목 | `text-lg font-bold leading-snug tracking-tight break-keep sm:text-xl` |
+| 카드 요약 | `text-[15px] leading-7 break-keep text-foreground/80` (3줄) |
+| 메타 정보 (출처, 날짜) | 출처 `text-xs font-semibold text-foreground/70`, 날짜 `text-xs text-muted` |
 | 버튼, 칩 | `text-sm font-medium` |
 
 본문 줄 간격은 `leading-7` 이상으로 둔다. 요약 글은 회색 단계를 너무 낮추지 않는다 (`/80` 이상).
@@ -94,14 +94,14 @@ body {
 
 - 간격은 4의 배수만 쓴다: `gap-2`, `gap-3`, `gap-4`, `p-5`, `py-8` 등.
 - 모서리: 카드와 모달 `rounded-2xl`, 버튼과 입력창 `rounded-lg`, 카테고리 칩 `rounded-full`.
-- 그림자: 기본은 `shadow-sm`, 카드 hover만 `hover:shadow-md`. 그 이상 진한 그림자는 쓰지 않는다.
+- 그림자: 기본은 `shadow-sm`, 카드 hover만 `hover:shadow-md` (카드 hover 동작은 4.1). 그 이상 진한 그림자는 쓰지 않는다.
 
 ### 2.4 카테고리 색
 
-카테고리 바의 칩과 카드의 카테고리 배지는 카테고리마다 색 하나를 쓴다. `globals.css`에 `--category-1` ~ `--category-10`(violet, sky, emerald, rose, amber, fuchsia, teal, orange, indigo, lime)을 두고 `@theme inline`에 `--color-category-N`으로 연결한다. 라이트 모드는 글자로 써도 대비가 충분한 700 계열, 다크 모드는 400 계열을 쓴다. 칩 배경은 같은 색의 `/10` 투명도로 만든다.
+카테고리 바의 칩과 카드의 카테고리 띠·이름은 카테고리마다 색 하나를 쓴다. `globals.css`에 `--category-1` ~ `--category-10`(violet, sky, emerald, rose, amber, fuchsia, teal, orange, indigo, lime)을 두고 `@theme inline`에 `--color-category-N`으로 연결한다. 라이트 모드는 글자로 써도 대비가 충분한 700 계열, 다크 모드는 400 계열을 쓴다. 칩 배경은 같은 색의 `/10` 투명도로 만든다.
 
 - 카테고리 → 색은 `src/lib/category-color.ts`의 `categoryTone(index)`로 정한다. `index`는 카테고리 목록(생성순)에서의 순서이고 `index % 10`으로 색을 고른다. 10개까지는 색이 겹치지 않고, 중간 카테고리를 지우면 뒤 카테고리의 색이 하나씩 당겨진다.
-- 카테고리 바, 카드 배지, 카테고리 관리 화면은 모두 같은 순서(`getCategoryCounts()`의 정렬)로 색을 고른다.
+- 카테고리 바, 카드, 카테고리 관리 화면은 모두 같은 순서(`getCategoryCounts()`의 정렬)로 색을 고른다.
 - 클래스 이름은 Tailwind가 찾을 수 있게 그 파일에 전체 이름으로 적는다. 컴포넌트에서 문자열을 조립하지 않는다.
 - 개발 서버(Turbopack)가 `category-color.ts`를 스캔하지 못해 색이 빠지는 일이 있어, `globals.css`의 `@source inline(...)`에도 같은 클래스를 등록한다. 카테고리 색 클래스를 새로 쓰면 두 곳을 함께 고친다.
 
@@ -195,7 +195,7 @@ body {
 ### 3.4 뉴스 카드 그리드
 
 ```tsx
-<ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+<ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
   {articles.map((a) => <li key={a.id}><NewsCard article={a} /></li>)}
 </ul>
 ```
@@ -215,55 +215,51 @@ body {
 ### 4.1 뉴스 카드
 
 ```
-┌────────────────────────────────────┐
-│ [모델·연구]         TechCrunch · 3시간 전 │  ← 카테고리 배지 + 메타
-│                                    │
-│ 한국어 제목이 두 줄까지 표시됩니다      │  ← 제목 (line-clamp-2)
-│                                    │
-│ 한국어 요약 3~4문장이 여기에 표시되며   │  ← 요약 (line-clamp-4)
-│ 넘치면 말줄임 처리됩니다...            │
-│ ────────────────────────────────── │
-│ 원문 보기 ↗                [Notion 저장] │  ← 하단 동작
-└────────────────────────────────────┘
+┌┃────────────────────────────────────┐
+│┃ 모델·연구          TechCrunch  3시간 전 │  ← 카테고리 이름(카테고리 색) + 출처·시간
+│┃                                    │
+│┃ 한국어 제목이 두 줄까지 크게        ↗ │  ← 제목 = 원문 링크 (line-clamp-2)
+│┃                                    │
+│┃ 한국어 요약이 세 줄까지 표시되며     │  ← 요약 (line-clamp-3)
+│┃ 넘치면 말줄임 처리됩니다...           │
+│┃                                    │
+│┃ ✕                     [Notion 저장] │  ← 삭제(hover 때만) + 저장
+└┃────────────────────────────────────┘
+ ↑ 카테고리 색 띠 (w-1)
 ```
 
-```tsx
-<article className="flex h-full flex-col rounded-2xl border border-border bg-surface p-5 shadow-sm transition-shadow hover:shadow-md">
-  <div className="flex items-center justify-between gap-2">
-    <CategoryBadge />
-    <p className="text-xs text-muted">
-      TechCrunch · <time dateTime="2026-10-14T09:00:00Z">3시간 전</time>
-    </p>
-  </div>
+카드 왼쪽 띠와 카테고리 이름은 카테고리 바 칩과 같은 색이다 (2.4). 카드를 훑을 때 색으로 분류를 먼저 알아보고, 다음으로 큰 제목을 읽게 한다. 구현은 `src/components/news-card.tsx`를 기준으로 한다.
 
-  <h2 className="mt-3 line-clamp-2 text-base font-semibold leading-snug sm:text-lg">{titleKo}</h2>
-  <p className="mt-2 line-clamp-4 text-[15px] leading-7 text-foreground/80">{summaryKo}</p>
+- **카테고리 띠**: `absolute inset-y-0 left-0 w-1` + `categoryTone(i).dot`. 미분류는 `bg-muted/40`. 카드는 `overflow-hidden`으로 모서리를 따라 띠를 자른다.
+- **카테고리 이름**: 배지 없이 글자색만 쓴다. `text-xs font-semibold` + `categoryTone(i).text`, 미분류는 `text-muted`.
+- **출처·시간**: 오른쪽 위에 둔다. 출처는 `text-xs font-semibold text-foreground/70`, 시간은 `text-xs text-muted tabular-nums`로 굵기와 색만 달리해 구분한다. 가운데 점(·)은 쓰지 않는다.
+- **제목**: `text-lg font-bold leading-snug tracking-tight sm:text-xl`. 제목 오른쪽 `↗`가 새 탭 링크 표시다.
+- **요약**: `text-[15px] leading-7 text-foreground/80`, 세 줄(`line-clamp-3`)까지.
+- 한국어는 단어 중간에서 줄이 바뀌지 않게 제목과 요약에 `break-keep`을 준다.
+- 여백: 카드 `py-6 pr-6 pl-7`(띠만큼 왼쪽을 더 둔다), 메타와 제목 사이 `mt-3`, 제목과 요약 사이 `mt-3`, 요약과 하단 사이 `min-h-5 flex-1` 여백 칸.
+- **카드 전체가 원문 링크다.** 제목 `<a>`에 `after:absolute after:inset-0`을 줘 카드 전체를 덮는다. 삭제·Notion 저장 버튼은 `relative z-10`으로 그 위에 둔다. 따로 '원문 보기' 링크는 두지 않는다. 스크린 리더용으로 `sr-only` '(새 탭에서 원문 열기)'를 넣는다.
+- 키보드 포커스는 카드 전체에 테두리로 보인다: `has-[[data-card-link]:focus-visible]:outline-2 ... outline-primary`.
+- 삭제 버튼은 왼쪽 아래에 두고 평소 `opacity-0`이다. 카드 hover나 포커스 때 보이고, hover가 없는 터치 기기에서는 항상 보인다 (`[@media(hover:none)]:opacity-100`).
 
-  <div className="mt-auto flex items-center justify-between border-t border-border pt-4">
-    <a href={sourceUrl} target="_blank" rel="noopener noreferrer"
-       className="text-sm font-medium text-muted hover:text-primary">
-      원문 보기 ↗
-    </a>
-    {/* Notion 저장 버튼 (4.3) */}
-  </div>
-</article>
-```
+**hover 동작** (`transition duration-200 ease-out`)
 
-- 카드 높이는 그리드 행 안에서 맞춘다 (`h-full` + `mt-auto`로 하단 동작 영역 고정).
-- 제목에 `title={originalTitle}`을 넣어 원문 제목을 툴팁으로 볼 수 있게 한다.
+| 요소 | 변화 |
+|---|---|
+| 카드 | `hover:-translate-y-0.5 hover:shadow-md`, 테두리가 카테고리 색으로 바뀐다 (`categoryTone(i).hover` = `hover:border-category-N/50`, 미분류는 `hover:border-foreground/20`) |
+| 카테고리 띠 | `w-1` → `w-1.5` |
+| 제목 옆 ↗ | `text-muted` → `text-primary`, 오른쪽 위로 2px 이동 |
+| 삭제 버튼 | 나타난다 |
+
+움직임은 `motion-reduce:`로 끈다 (이동과 transition 제거).
+
+- 카드 높이는 그리드 행 안에서 맞춘다 (`h-full` + 여백 칸으로 하단 동작 영역 고정).
+- 제목 링크에 `title={originalTitle}`을 넣어 원문 제목을 툴팁으로 볼 수 있게 한다.
 - 발행일: 24시간 이내는 상대 시간('3시간 전'), 그 외는 `2026. 10. 14.` 형식. `Intl` API를 `ko-KR`로 쓴다.
 - 출처 표시명: `techcrunch` → `TechCrunch`, `theverge` → `The Verge`.
 
-### 4.2 카테고리 배지 (카드 안)
+### 4.2 카테고리 표시 (카드 안)
 
-```tsx
-<span className="inline-flex items-center rounded-full bg-primary-soft px-2.5 py-0.5 text-xs font-medium text-primary">
-  모델·연구
-</span>
-```
-
-- 미분류는 회색으로 표시한다: `bg-foreground/5 text-muted`.
-- 카테고리 배지는 카테고리 바 칩과 같은 카테고리 색(2.4)을 쓴다: `categoryTone(id).badge` = `bg-category-N/10 text-category-N`. 위 예시의 `bg-primary-soft text-primary` 대신 이것을 쓴다.
+카드 안에서는 카테고리를 배지(알약 모양)로 감싸지 않고, 왼쪽 띠와 카테고리 이름 글자색으로 보여준다 (4.1). 색은 카테고리 바 칩과 같은 `categoryTone(index)`의 `dot`(띠)과 `text`(이름)를 쓴다. 미분류는 띠 `bg-muted/40`, 이름 `text-muted`.
 
 ### 4.3 버튼
 
@@ -272,7 +268,7 @@ body {
 | 주 버튼 | 뉴스 가져오기, 모달의 '추가' | `inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-medium text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60` |
 | 보조 버튼 | Notion 저장, 취소 | `inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-border bg-surface px-3 text-sm font-medium text-foreground hover:bg-foreground/5 disabled:opacity-60` |
 | 위험 버튼 | 카테고리 삭제 | `... bg-danger text-white hover:opacity-90` (주 버튼 모양에 색만 바꾼다) |
-| 텍스트 버튼 | 원문 보기, 카테고리 관리 | `text-sm font-medium text-muted hover:text-primary` |
+| 텍스트 버튼 | 카테고리 관리, 전체 보기 | `text-sm font-medium text-muted hover:text-primary` |
 
 모든 버튼에 키보드 포커스 표시를 넣는다: `focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary`.
 
