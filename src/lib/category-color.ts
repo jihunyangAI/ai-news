@@ -2,63 +2,63 @@
 const TONES = [
   {
     dot: "bg-category-1",
+    text: "text-category-1",
     hover: "hover:border-category-1/50",
     active: "border-category-1 bg-category-1/10 text-category-1",
-    badge: "bg-category-1/10 text-category-1",
   },
   {
     dot: "bg-category-2",
+    text: "text-category-2",
     hover: "hover:border-category-2/50",
     active: "border-category-2 bg-category-2/10 text-category-2",
-    badge: "bg-category-2/10 text-category-2",
   },
   {
     dot: "bg-category-3",
+    text: "text-category-3",
     hover: "hover:border-category-3/50",
     active: "border-category-3 bg-category-3/10 text-category-3",
-    badge: "bg-category-3/10 text-category-3",
   },
   {
     dot: "bg-category-4",
+    text: "text-category-4",
     hover: "hover:border-category-4/50",
     active: "border-category-4 bg-category-4/10 text-category-4",
-    badge: "bg-category-4/10 text-category-4",
   },
   {
     dot: "bg-category-5",
+    text: "text-category-5",
     hover: "hover:border-category-5/50",
     active: "border-category-5 bg-category-5/10 text-category-5",
-    badge: "bg-category-5/10 text-category-5",
   },
   {
     dot: "bg-category-6",
+    text: "text-category-6",
     hover: "hover:border-category-6/50",
     active: "border-category-6 bg-category-6/10 text-category-6",
-    badge: "bg-category-6/10 text-category-6",
   },
   {
     dot: "bg-category-7",
+    text: "text-category-7",
     hover: "hover:border-category-7/50",
     active: "border-category-7 bg-category-7/10 text-category-7",
-    badge: "bg-category-7/10 text-category-7",
   },
   {
     dot: "bg-category-8",
+    text: "text-category-8",
     hover: "hover:border-category-8/50",
     active: "border-category-8 bg-category-8/10 text-category-8",
-    badge: "bg-category-8/10 text-category-8",
   },
   {
     dot: "bg-category-9",
+    text: "text-category-9",
     hover: "hover:border-category-9/50",
     active: "border-category-9 bg-category-9/10 text-category-9",
-    badge: "bg-category-9/10 text-category-9",
   },
   {
     dot: "bg-category-10",
+    text: "text-category-10",
     hover: "hover:border-category-10/50",
     active: "border-category-10 bg-category-10/10 text-category-10",
-    badge: "bg-category-10/10 text-category-10",
   },
 ] as const;
 

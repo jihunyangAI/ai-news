@@ -140,7 +140,7 @@ async function NewsList({ searchParams }: Pick<PageProps<"/dashboard">, "searchP
           </Link>
         </div>
       ) : (
-        <ul className="mt-6 grid grid-cols-1 gap-4 transition-opacity sm:grid-cols-2 lg:grid-cols-3 group-has-[[data-link-pending]]/list:pointer-events-none group-has-[[data-link-pending]]/list:opacity-50">
+        <ul className="mt-6 grid grid-cols-1 gap-5 transition-opacity sm:grid-cols-2 lg:grid-cols-3 group-has-[[data-link-pending]]/list:pointer-events-none group-has-[[data-link-pending]]/list:opacity-50">
           {articles.map((article) => (
             <li key={article.id}>
               <NewsCard
