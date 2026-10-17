@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Noto_Sans_KR } from "next/font/google";
-import { ClerkProvider, Show, UserButton } from "@clerk/nextjs";
+import { ClerkProvider, Show } from "@clerk/nextjs";
 import { koKR } from "@clerk/localizations";
 import { Suspense } from "react";
 import { FetchNewsButton } from "@/components/fetch-news-button";
+import { UserMenu } from "@/components/user-menu";
 import "./globals.css";
 
 // Korean glyphs are split into many unicode-range files, so there is no single subset to preload
@@ -33,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                   </Link>
                   <div className="flex items-center gap-3">
                     <FetchNewsButton />
-                    <UserButton />
+                    <UserMenu />
                   </div>
                 </div>
               </header>
