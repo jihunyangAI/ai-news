@@ -19,10 +19,13 @@
 
 ## 2. 디자인 토큰
 
-`src/app/globals.css`에 아래처럼 정의한다. 다크 모드는 시스템 설정(`prefers-color-scheme`)을 따른다.
+`src/app/globals.css`에 아래처럼 정의한다. 다크 모드는 `<html>`의 `.dark` 클래스로 전환한다. 전환 규칙은 2.5를 따른다.
 
 ```css
 @import "tailwindcss";
+
+/* dark: 유틸리티도 .dark 클래스를 따르게 한다 */
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #f8fafc;   /* 페이지 배경 (slate-50) */
@@ -37,19 +40,18 @@
   --success: #16a34a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b1120;
-    --surface: #111827;
-    --foreground: #e5e7eb;
-    --muted: #94a3b8;
-    --border: #1f2937;
-    --primary: #3b82f6;
-    --primary-hover: #60a5fa;
-    --primary-soft: #172554;
-    --danger: #f87171;
-    --success: #4ade80;
-  }
+:root.dark {
+  color-scheme: dark;
+  --background: #0b1120;
+  --surface: #111827;
+  --foreground: #e5e7eb;
+  --muted: #94a3b8;
+  --border: #1f2937;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --primary-soft: #172554;
+  --danger: #f87171;
+  --success: #4ade80;
 }
 
 @theme inline {
@@ -105,6 +107,22 @@ body {
 - 클래스 이름은 Tailwind가 찾을 수 있게 그 파일에 전체 이름으로 적는다. 컴포넌트에서 문자열을 조립하지 않는다.
 - 개발 서버(Turbopack)가 `category-color.ts`를 스캔하지 못해 색이 빠지는 일이 있어, `globals.css`의 `@source inline(...)`에도 같은 클래스를 등록한다. 카테고리 색 클래스를 새로 쓰면 두 곳을 함께 고친다.
 
+### 2.5 다크 모드
+
+헤더의 테마 토글(`src/components/theme-toggle.tsx`)로 라이트와 다크를 바꾼다. 다크 모드는 `<html>`에 `.dark` 클래스가 붙는 것으로 정의한다.
+
+| 상황 | 적용되는 테마 |
+|---|---|
+| 토글을 누른 적이 있다 | 마지막으로 고른 테마 (`localStorage`의 `theme` 키: `"dark"` 또는 `"light"`) |
+| 저장된 값이 없다 | 시스템 설정(`prefers-color-scheme`) |
+| `localStorage`를 쓸 수 없다 | 시스템 설정을 따르고, 토글은 현재 화면에서만 전환된다 |
+
+- **색은 토큰으로만 바꾼다.** 다크 색은 `globals.css`의 `:root.dark`에서 토큰 값만 바꿔 정의한다. 컴포넌트는 `bg-surface`, `text-foreground` 같은 토큰을 쓰므로 따로 손대지 않아도 함께 전환된다. 토큰으로 표현할 수 없는 경우에만 `dark:` 유틸리티를 쓴다.
+- **깜빡임 방지:** `layout.tsx`의 `<head>`에 있는 작은 인라인 스크립트가 첫 화면을 그리기 전에 저장된 테마(없으면 시스템 설정)를 `<html>`에 적용한다. 그래서 `<html>`에는 `suppressHydrationWarning`을 둔다. 이 설정은 `<html>` 태그 자체의 속성 차이만 무시한다.
+- **토글 버튼:** 헤더 오른쪽 '뉴스 가져오기'와 사용자 메뉴 사이에 둔다. 아이콘만 있는 보조 버튼(`size-9 rounded-lg border border-border bg-surface`)이다. 다크 상태에서는 해 아이콘, 라이트 상태에서는 달 아이콘을 보여준다. `aria-label`은 '다크 모드로 전환' 또는 '라이트 모드로 전환'으로, 누르면 바뀔 상태를 쓴다.
+- **hydration:** 서버는 사용자의 테마를 알 수 없다. 그래서 토글은 hydration 중에는 라이트 기준으로 그리고, 그 뒤에 `<html>`의 `.dark` 클래스를 따른다.
+- 헤더는 로그인 상태에서만 보이므로, 토글도 로그인한 뒤에 나타난다. 로그인 전 화면은 저장된 테마나 시스템 설정을 따른다.
+
 ---
 
 ## 3. 화면 구성
@@ -113,7 +131,7 @@ body {
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│ AI뉴스 수집기                     [뉴스 가져오기]  (사용자) │  ← 헤더 (sticky)
+│ AI뉴스 수집기               [뉴스 가져오기] [☾] (사용자) │  ← 헤더 (sticky)
 ├──────────────────────────────────────────────────────────┤
 │ 뉴스 대시보드                                              │  ← 페이지 제목 + 기사 수
 │ 총 42건                                                   │
@@ -137,7 +155,8 @@ body {
     <Link href="/" className="text-lg font-bold tracking-tight">AI뉴스 수집기</Link>
     <div className="flex items-center gap-3">
       {/* 뉴스 가져오기 버튼 (주 버튼) */}
-      <UserButton />
+      <ThemeToggle />  {/* 다크 모드 토글 (2.5) */}
+      <UserMenu />     {/* Clerk UserButton을 hydration 뒤에 그린다 */}
     </div>
   </div>
 </header>
