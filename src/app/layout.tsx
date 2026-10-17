@@ -41,6 +41,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </Show>
           </Suspense>
           {children}
+          {/* body가 flex-col이라 mt-auto로 내용이 짧은 화면에서도 바닥에 붙인다 */}
+          <footer className="mt-auto border-t border-border bg-surface">
+            <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+              <p className="text-xs text-muted">© 2026 AI뉴스 수집기</p>
+            </div>
+          </footer>
         </body>
       </html>
     </ClerkProvider>
