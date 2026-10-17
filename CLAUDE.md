@@ -6,22 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 프로젝트 상태
 
-`create-next-app`으로 막 만든 상태다. 앱 코드는 아직 없고, `src/app`에는 기본 템플릿만 있다. 기능 명세는 `PRD.md`다. 구현 전에 반드시 읽는다. 기능 F1~F7, 데이터 모델, 미결 사항(9장)이 정리되어 있다.
+Vercel(`ai-news` 프로젝트)에 운영 배포 중이다. 기능 명세는 `PRD.md`다. 구현 전에 반드시 읽는다. 기능 F1~F7, 데이터 모델, 미결 사항(9장)이 정리되어 있다.
 
 UI 가이드는 `ui.md`다. 화면이나 컴포넌트를 만들거나 고치기 전에 반드시 읽는다. 디자인 토큰, 레이아웃, 컴포넌트별 Tailwind 클래스, 상태 화면, 문구 규칙이 정리되어 있다. 색상 hex 값을 컴포넌트에 직접 쓰지 않고 `ui.md`의 토큰을 쓴다.
 
-## 명령어
+## 작업 흐름
 
-- `npm run dev`: 개발 서버 (Turbopack)
-- `npm run build`: 프로덕션 빌드와 TypeScript 검사
-- `npm run lint`: ESLint (flat config, `eslint.config.mjs`)
-- 테스트 도구는 아직 설정되지 않았다
-
-### 슬래시 명령 (`.claude/commands/`)
-
-- `/news-workflow [브랜치-이름]`: 새 기능 개발 흐름. 메인 브랜치(`master`) 확인 → 새 브랜치 생성(이름이 없으면 기능을 묻고 영어 소문자-하이픈 이름 제안) → 기술 스택·컨벤션 안내 → 사용자가 '완료'/'done'을 입력하면 변경 파일 목록, lint·build 검사, 커밋 메시지 제안 → 확인 후 작업 브랜치에 커밋하고 push해 Vercel 프리뷰 배포 확인 → 사용자가 고르면 `--no-ff`로 메인에 병합하고 push해 운영 배포 → 작업 요약. 메인 push는 곧 운영 배포이므로 프리뷰 확인 전에는 하지 않는다.
-- `/new-branch <브랜치-이름>`: 메인으로 이동한 뒤 새 브랜치만 만든다.
-- `/daily-check`: 변경 상태, 최근 커밋 5개, 메인과의 차이를 점검한다.
+- 메인 브랜치는 `master`다. 기능 개발은 `/news-workflow`(`.claude/commands/`)를 따른다.
+- **`master`에 push하면 곧바로 운영 배포된다.** 작업 브랜치를 push해 Vercel 프리뷰를 확인하고, 사용자가 고른 뒤에만 `master`에 병합하고 push한다.
 
 ## Next.js 버전 주의점
 
