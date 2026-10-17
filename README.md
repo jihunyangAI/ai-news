@@ -142,6 +142,11 @@ drizzle/                      # 마이그레이션 SQL
 - [`ui.md`](./ui.md): 디자인 토큰, 컴포넌트 규칙, 문구 규칙
 - [`CLAUDE.md`](./CLAUDE.md): 이 저장소에서 Claude Code로 작업할 때의 지침
 
+## 사용한 플러그인
+
+- **Frontend Design**: UI 디자인 품질 향상
+- **commit-commands**: 깃 워크플로 자동화
+
 ## 설계 메모
 
 - **뉴스는 버튼을 눌렀을 때만 가져옵니다.** 크론 같은 자동 수집은 없습니다.
