@@ -208,6 +208,22 @@ body {
 
 정렬은 발행일 최신순이다.
 
+### 3.5 푸터
+
+모든 화면 맨 아래에 둔다 (`layout.tsx`). 저작권 표기만 넣는다.
+
+```tsx
+<footer className="mt-auto border-t border-border bg-surface">
+  <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+    <p className="text-xs text-muted">© 2026 AI뉴스 수집기</p>
+  </div>
+</footer>
+```
+
+- 헤더와 같은 폭(`max-w-6xl`)과 좌우 여백을 쓴다.
+- `body`가 `flex flex-col`이므로 `mt-auto`로 내용이 짧은 화면에서도 바닥에 붙인다.
+- 연도는 서비스를 시작한 해(2026)로 고정한다.
+
 ---
 
 ## 4. 컴포넌트
